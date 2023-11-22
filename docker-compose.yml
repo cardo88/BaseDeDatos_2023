@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   frontend:
     build:
@@ -15,11 +16,18 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
+    volumes:
+      - ./Backend:/usr/src/app # Monta el código fuente
+      - /usr/src/app/node_modules # Evita que el volumen sobrescriba node_modules
+    command: npx nodemon src/index.js # Asumiendo que tu archivo principal es index.js
     depends_on:
       - db
     environment:
       - DATABASE_HOST=db
-      - NODE_ENV=production
+      - DATABASE_USER=user
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=proyecto
+      - NODE_ENV=development # Cambiado a development para desarrollo
 
   db:
     image: mysql:5.7
