@@ -18,30 +18,30 @@ async function compararPassword(password, passwordHash) {
 }
 
 export const register = async (req, res) => {
-    const { cedula, username, password } = req.body;
+    const { ci, logId, password } = req.body;
 
     // Chequear que los datos requeridos no estén vacíos
-    if (!cedula || !username || !password) {
+    if (!ci || !logId || !password) {
         return res.status(400).json({ message: "Cédula es requerida" });
     }
 
     // Chequear que la cédula no esté en la base de datos
-    let [rows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [cedula]);
+    let [rows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
     if (rows.length > 0) {
         // Cédula encontrada
         return res.status(400).json({ message: "Cédula ya registrada" });
     }
 
-    // Chequear que el username no esté en la base de datos
-    [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [username]);
+    // Chequear que el logId no esté en la base de datos
+    [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [logId]);
     if (rows.length > 0) {
-        return res.status(400).json({ message: "Username ya registrado" });
+        return res.status(400).json({ message: "logId ya registrado" });
     }
 
     // Chequea si la cédula está en la base de datos. Si no está, permite el registro
     try {
         const passwordHash = await hashPassword(password);
-        [rows] = await connection.query('INSERT INTO Logins (LogId, Password) VALUES (?, ?)', [username, passwordHash]);
+        [rows] = await connection.query('INSERT INTO Logins (LogId, Password) VALUES (?, ?)', [logId, passwordHash]);
         if (rows.affectedRows > 0) {
             // Registro exitoso
             return res.status(201).json({ message: "Registro exitoso" });
@@ -56,22 +56,22 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-    const { username, password } = req.body;
+    const { logId, password } = req.body;
 
-    if (!username || !password) {
+    if (!logId || !password) {
         return res.status(400).json({ message: "Los datos no pueden estar vacíos." });
     }
 
-    // Chequea si el username y la contraseña coinciden con los de la base de datos
+    // Chequea si el logId y la contraseña coinciden con los de la base de datos
     try {
-        const [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [username]);
+        const [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [logId]);
         console.log("llegó");
         if (rows.length > 0) {
             // Chequea si la contraseña coincide
             const passwordHash = rows[0].Password;
             if (compararPassword(password, passwordHash)) {
                 // Login exitoso
-                const token = generarTokenDeUsuario(username);
+                const token = generarTokenDeUsuario(logId);
                 res.json({ token });
             } else {
                 // Contraseña incorrecta
