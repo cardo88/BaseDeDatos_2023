@@ -15,7 +15,7 @@ function Register() {
         return;
       }
 
-    axios.post('http://localhost:3000/api/auth/register/', { logId, password })
+    axios.post('http://localhost:3001/api/auth/register/', { logId, password })
          .then(response => {
              console.log('Registration successful:', response.data);
              navigate('/');
