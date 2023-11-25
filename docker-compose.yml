@@ -6,8 +6,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:80"
-    depends_on:
-      - backend
 
   backend:
     build:
@@ -22,7 +20,7 @@ services:
       - NODE_ENV=production
 
   db:
-    image: mysql:5.7
+    image: mysql:latest
     ports:
       - "3306:3306"
     environment:
