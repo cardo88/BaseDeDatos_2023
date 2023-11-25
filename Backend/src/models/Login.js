@@ -1,17 +1,7 @@
 class Login {
-    constructor(username, password) {
+    constructor(username, passwordHash) {
         this.username = username;
-        this.password = password;
-    }
-
-    // Método estático para hashear la contraseña
-    static async hashPassword(password) {
-        return await bcrypt.hash(password, 10);
-    }
-
-    // Método para comparar la contraseña con el hash almacenado
-    async compararPassword(password) {
-        return await bcrypt.compare(password, this.passwordHash);
+        this.passwordHash = passwordHash;
     }
 }
 
