@@ -1,8 +1,8 @@
 -- Crear la base de datos
-CREATE DATABASE if not exists obligatorio_2023;
+CREATE DATABASE if not exists proyecto;
 
 -- Elegir la base de datos
-USE obligatorio_2023;
+USE proyecto;
 
 -- Crear la tabla Logins
 CREATE TABLE Logins (

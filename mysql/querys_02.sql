@@ -1,11 +1,11 @@
 -- Elegir la base de datos
-USE obligatorio_2023;
+USE proyecto;
 
 -- verificar si existe usuario con ese username
-SELECT LogId FROM Logins WHERE LogId = 'pepe';
+SELECT LogId FROM Logins WHERE LogId = 'user1';
 
 -- verificar contraseña
-SELECT Password FROM Logins WHERE LogId = 'pepe';
+SELECT Password FROM Logins WHERE LogId = 'user1';
 
 -- registrar usuario
 INSERT INTO Logins (LogId, Password) VALUES ('nuevo_usuario', 'contraseña_nuevo_usuario');
