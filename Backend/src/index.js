@@ -2,7 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 
 import authRoutes from './routes/authRoutes.js';
-import verificarToken from './src/middlewares/authMiddleware.mjs';
+import verificarToken from './middlewares/authMiddleware.js';
 import errorHandler from './middlewares/errorMiddleware.js';
 
 const app = express();
