@@ -2,7 +2,9 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+
 import { toast } from 'react-toastify';
+
 
 function Formulario() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -30,7 +32,9 @@ function Formulario() {
         }
       }
 
+
     axios.post('http://localhost:3001/api/auth/register/', formData, {
+    axios.post('http://localhost:3000/api/auth/register/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
