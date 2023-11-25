@@ -25,6 +25,20 @@ export const register = async (req, res) => {
         return res.status(400).json({ message: "Cédula, logId y contraseña son requeridos" });
     }
 
+    // Chequear que la cédula no esté en la base de datos
+    let [rows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [cedula]);
+    if (rows.length > 0) {
+        // Cédula encontrada
+        return res.status(400).json({ message: "Cédula ya registrada" });
+    }
+
+    // Chequear que el username no esté en la base de datos
+    [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [username]);
+    if (rows.length > 0) {
+        return res.status(400).json({ message: "Username ya registrado" });
+    }
+
+    // Chequea si la cédula está en la base de datos. Si no está, permite el registro
     try {
         // Chequear si la cédula existe en la base de datos
         let [rows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
