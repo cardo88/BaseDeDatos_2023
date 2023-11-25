@@ -34,7 +34,6 @@ function Formulario() {
 
 
     axios.post('http://localhost:3001/api/auth/register/', formData, {
-    axios.post('http://localhost:3000/api/auth/register/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
