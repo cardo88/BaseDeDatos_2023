@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
+import { toast } from 'react-toastify';
+
+
 function Formulario() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const navigate = useNavigate();
@@ -13,6 +16,14 @@ function Formulario() {
 
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
+    const today = new Date();
+    const fechaVencimiento = new Date(data.fechaVencimientoCarne);
+
+    if (fechaVencimiento < today) {
+        toast.error("La fecha de vencimiento es anterior a la fecha actual. Necesitas hacer una reserva de agenda.");
+        return;
+    }
+
     for (const key in data) {
         if (key === 'carnetJPG') {
           formData.append(key, data[key][0]); 
@@ -21,6 +32,8 @@ function Formulario() {
         }
       }
 
+
+    axios.post('http://localhost:3001/api/auth/register/', formData, {
     axios.post('http://localhost:3000/api/auth/register/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -36,7 +49,7 @@ function Formulario() {
     });  
 
   const goBack = () => {
-    navigate(-1);
+    navigate('/Indice');
   };
 
   const navigateToAgenda = () => {
@@ -52,12 +65,11 @@ function Formulario() {
         <form onSubmit={onSubmit} className="space-y-6" encType="multipart/form-data">
             <div className='flex flex-col space-y-4'>
                 <input 
-                    {...register('CI', { required: true })} 
+                    {...register('CI', { required: "Este campo es obligatorio", pattern: { value: /^[0-9]+$/i, message:"Solo se permiten numeros" }})} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="CI" 
                 />
-                {errors.CI && <span className="text-red-600 text-sm">Este campo es requerido</span>}
-
+                {errors.CI && <span className="text-red-600 text-sm">{errors.CI.message}</span>}
                 <input 
                     type={fechaNacimientoType} 
                     onFocus={() => setFechaNacimientoType('date')}
@@ -127,11 +139,17 @@ function Formulario() {
 
                 <input 
                     type="tel" 
-                    {...register('telefono', { required: true })} 
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    {...register('telefono', { 
+                      required: "Este campo es obligatorio",
+                      pattern: {
+                        value: /^[0-9]*$/,
+                        message: "Solo se permiten números"
+                      }
+                    })} 
                     placeholder="Teléfono de contacto" 
-                />
-                {errors.telefono && <span className="text-red-600 text-sm">Este campo es requerido</span>}   
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                {errors.telefono && <span className="text-red-600 text-sm">{errors.telefono.message}</span>}   
             </div>
 
             <div className="flex justify-center mt-6">
