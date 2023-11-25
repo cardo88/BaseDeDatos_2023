@@ -5,10 +5,13 @@ import Home from './Home.jsx';
 import Index from './Formulario/Index.jsx';
 import Formulario from './Formulario/Formulario.jsx';
 import Agenda from './Formulario/Agenda.jsx';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <BrowserRouter>
+      <ToastContainer/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Register" element={<Register />} />
