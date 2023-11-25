@@ -1,8 +1,10 @@
 import express from 'express';
-import { checkCedula } from '../controllers/authController.js';
+import { register, login } from '../controllers/authController.js';
 
 const router = express.Router();
 
-router.get('/verify-cedula', checkCedula);
+router.post('/register', register);
+
+router.post('/login', login);
 
 export default router;

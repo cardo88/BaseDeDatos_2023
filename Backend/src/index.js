@@ -2,6 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 
 import authRoutes from './routes/authRoutes.js';
+import verificarToken from './middlewares/authMiddleware.js';
 import errorHandler from './middlewares/errorMiddleware.js';
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 
 // Middleware que verifica el token para todas las rutas siguientes
+app.use(verificarToken);
 
 // Rutas protegidas que requieren autenticación
 
