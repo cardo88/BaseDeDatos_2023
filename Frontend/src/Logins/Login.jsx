@@ -11,7 +11,7 @@ function Login() {
     axios.post('http://localhost:3000/api/auth/login/', { logId, password })
          .then(response => {
              console.log('Login successful:', response.data);
-             navigate('/Index');
+             navigate("/Indice");
          })
          .catch(error => {
              console.error('Login error:', error);
