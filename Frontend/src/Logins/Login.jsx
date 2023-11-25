@@ -8,7 +8,7 @@ function Login() {
 
   const onSubmit = handleSubmit((data) => {
     const { logId, password } = data;
-    axios.post('http://localhost:3000/api/auth/login/', { logId, password })
+    axios.post('http://localhost:3001/api/auth/login/', { logId, password })
          .then(response => {
              console.log('Login successful:', response.data);
              navigate("/Indice");

@@ -1,13 +1,13 @@
 class Funcionario {
-    constructor(cedula, username) {
+    constructor(cedula, nombre, apellido, fechaNacimiento, direccion, telefono, email, username) {
         this.cedula = cedula;
         this.username = username;
-        this.nombre = "";
-        this.apellido = "";
-        this.fechaNacimiento = "";
-        this.direccion = "";
-        this.telefono = "";
-        this.email = "";
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.fechaNacimiento = fechaNacimiento;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.email = email;
     }
 }
 
