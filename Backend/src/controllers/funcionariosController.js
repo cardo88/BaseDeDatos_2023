@@ -1,6 +1,6 @@
 import connection from '../config/database.js';
 import Funcionario from '../models/Funcionario.js';
-
+import { getCurrentDate } from '../util/dateUtil.js';
 
 
 export const getFuncionarioByCI = async (req, res) => {
@@ -38,39 +38,50 @@ export const getFuncionarioByCI = async (req, res) => {
 };
 
 
-
 export const updateFuncionarioByCI = async (req, res) => {
-    const { ci } = req.body;
-    const { nombre, apellido, fechaNacimiento, direccion, telefono, email } = req.body;
+    const { ci, nombre, apellido, fechaNacimiento, direccion, telefono, email } = req.body;
 
-    if (!nombre || !apellido || !fechaNacimiento || !direccion || !telefono || !email) {
-        return res.status(400).json({ message: "Todos los campos son requeridos" });
-    }
+    // Obtener la fecha actual
+    const currentDate = getCurrentDate();
 
     try {
-        // Verificar si el funcionario con la cédula proporcionada existe
-        const [existingFuncionarioRows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
+        // Verificar si la fecha actual está dentro de algún periodo de actualización
+        const [periodos] = await connection.query('SELECT * FROM Periodos_Actualizacion WHERE ? BETWEEN Fch_Inicio AND Fch_Fin', [currentDate]);
 
-        if (existingFuncionarioRows.length === 0) {
-            return res.status(404).json({ message: "Funcionario no encontrado" });
+        if (periodos.length === 0) {
+            return res.status(400).json({ message: "No se puede actualizar fuera de los periodos de actualización" });
         }
 
-        // Actualizar los datos del funcionario
-        const updateQuery = `
-            UPDATE Funcionarios 
-            SET Nombre = ?, Apellido = ?, Fch_Nacimiento = ?, Dirección = ?, Teléfono = ?, Email = ?
-            WHERE Ci = ?`;
+        // Realizar la actualización del funcionario
+        const [result] = await connection.query(
+            'UPDATE Funcionarios SET Nombre = ?, Apellido = ?, Fch_Nacimiento = ?, Dirección = ?, Teléfono = ?, Email = ? WHERE Ci = ?',
+            [nombre, apellido, fechaNacimiento, direccion, telefono, email, ci]
+        );
+        console.log(result);
+        if (result.affectedRows > 0) {
+            // Obtener y devolver los nuevos datos del funcionario actualizado
+            const [updatedRows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
 
-        const [updateResult] = await connection.query(updateQuery, [nombre, apellido, fechaNacimiento, direccion, telefono, email, ci]);
+            if (updatedRows.length > 0) {
+                const funcionario = new Funcionario(
+                    updatedRows[0].Ci,
+                    updatedRows[0].Nombre,
+                    updatedRows[0].Apellido,
+                    updatedRows[0].Fch_Nacimiento,
+                    updatedRows[0].Dirección,
+                    updatedRows[0].Teléfono,
+                    updatedRows[0].Email,
+                    updatedRows[0].LogId
+                );
 
-        if (updateResult.affectedRows > 0) {
-            return res.status(200).json({ message: "Datos del funcionario actualizados correctamente" });
-        } else {
-            return res.status(500).json({ message: "Error al actualizar los datos del funcionario" });
+                return res.status(200).json({ message: "Funcionario actualizado exitosamente", funcionario });
+            }
         }
+
+        return res.status(404).json({ message: "Funcionario no encontrado o no se pudo actualizar" });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Error al actualizar los datos del funcionario" });
+        console.error(error.sqlMessage);
+        return res.status(500).json({ message: "Error al actualizar el funcionario", error: error.sqlMessage });
     }
 };
 
