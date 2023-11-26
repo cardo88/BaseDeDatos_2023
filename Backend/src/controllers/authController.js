@@ -25,61 +25,44 @@ export const register = async (req, res) => {
         return res.status(400).json({ message: "Cédula, logId y contraseña son requeridos" });
     }
 
-    // Chequear que la cédula no esté en la base de datos
-    let [rows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [cedula]);
-    if (rows.length > 0) {
-        // Cédula encontrada
-        return res.status(400).json({ message: "Cédula ya registrada" });
-    }
-
-    // Chequear que el username no esté en la base de datos
-    [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [username]);
-    if (rows.length > 0) {
-        return res.status(400).json({ message: "Username ya registrado" });
-    }
-
-    // Chequea si la cédula está en la base de datos. Si no está, permite el registro
     try {
-        // Chequear si la cédula existe en la base de datos
-        let [rows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
+        // Iniciar la transacción
+        await connection.beginTransaction();
 
-        if (rows.length > 0) {
-            // Cédula encontrada
-
-            // Verificar si el logId está vacío
-            if (rows[0].LogId === null || rows[0].LogId === "") {
-
-                // Chequear que el logId no esté en la tabla Logins
-                [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [logId]);
-                if (rows.length > 0) {
-                    return res.status(400).json({ message: "logId ya registrado" });
-                } else {
-
-                    // Actualizar el logId en la tabla Funcionarios
-                    await connection.query('UPDATE Funcionarios SET LogId = ? WHERE Ci = ?', [logId, ci]);
-
-                    // Insertar el logId y contraseña en la tabla Logins
-                    const passwordHash = await hashPassword(password);
-                    await connection.query('INSERT INTO Logins (LogId, Password) VALUES (?, ?)', [logId, passwordHash]);
-
-                    return res.status(201).json({ message: "Registro exitoso" });
-                }
-            } else {
-                // El logId ya está asignado a la cédula
-                return res.status(400).json({ message: "Cédula ya registrada con un logId" });
-            }
-        } else {
-            // Cédula no encontrada, insertar en la tabla Funcionarios
-            const passwordHash = await hashPassword(password);
-            await connection.query('INSERT INTO Funcionarios (Ci, LogId) VALUES (?, ?)', [ci, logId]);
-
-            // Insertar el logId y contraseña en la tabla Logins
-            await connection.query('INSERT INTO Logins (LogId, Password) VALUES (?, ?)', [logId, passwordHash]);
-
-            return res.status(201).json({ message: "Registro exitoso" });
+        // Chequear que la cédula no esté en la base de datos
+        const [rowsCi] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
+        if (rowsCi.length > 0) {
+            // Cédula encontrada, rollback y devolver error
+            await connection.rollback();
+            return res.status(400).json({ message: "Cédula ya registrada" });
         }
+
+        // Chequear que el logId no esté en la base de datos
+        const [rowsLogId] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [logId]);
+        if (rowsLogId.length > 0) {
+            // LogId encontrado, rollback y devolver error
+            await connection.rollback();
+            return res.status(400).json({ message: "Username ya registrado" });
+        }
+
+        // Insertar el logId y contraseña en la tabla Logins
+        const passwordHash = await hashPassword(password);
+        await connection.query('INSERT INTO Logins (LogId, Password) VALUES (?, ?)', [logId, passwordHash]);
+
+        // Insertar en la tabla Funcionarios
+        await connection.query('INSERT INTO Funcionarios (Ci, LogId) VALUES (?, ?)', [ci, logId]);
+
+        // Confirmar la transacción
+        await connection.commit();
+
+        return res.status(201).json({ message: "Registro exitoso" });
+
     } catch (error) {
         console.error(error);
+
+        // Rollback en caso de error
+        await connection.rollback();
+
         return res.status(500).json({ message: "Error al registrar" });
     }
 };
@@ -94,7 +77,7 @@ export const login = async (req, res) => {
     // Chequea si el logId y la contraseña coinciden con los de la base de datos
     try {
         const [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [logId]);
-        console.log("llegó");
+        //console.log("llegó");
         if (rows.length > 0) {
             // Chequea si la contraseña coincide
             const passwordHash = rows[0].Password;

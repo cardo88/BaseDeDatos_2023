@@ -13,9 +13,9 @@ CREATE TABLE Logins (
 -- Crear la tabla Funcionarios
 CREATE TABLE Funcionarios (
     Ci INT PRIMARY KEY,
-    Nombre VARCHAR(50) NOT NULL,
-    Apellido VARCHAR(50) NOT NULL,
-    Fch_Nacimiento DATE NOT NULL,
+    Nombre VARCHAR(50),
+    Apellido VARCHAR(50),
+    Fch_Nacimiento DATE,
     Dirección VARCHAR(255),
     Teléfono VARCHAR(15),
     Email VARCHAR(255),
