@@ -90,7 +90,7 @@ export const getFuncionarioByLogId = async (req, res) => {
     const { logId } = req.query;
 
     if (!logId) {
-        return res.status(400).json({ message: "El LogId es requerido" });
+        return res.status(400).json({ message: "El logId es requerido" });
     }
 
     try {

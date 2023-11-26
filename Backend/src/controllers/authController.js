@@ -26,30 +26,43 @@ export const register = async (req, res) => {
     }
 
     try {
+        // Iniciar la transacción
+        await connection.beginTransaction();
+
         // Chequear que la cédula no esté en la base de datos
-        let [rows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
-        if (rows.length > 0) {
-            // Cédula encontrada
+        const [rowsCi] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
+        if (rowsCi.length > 0) {
+            // Cédula encontrada, rollback y devolver error
+            await connection.rollback();
             return res.status(400).json({ message: "Cédula ya registrada" });
         }
 
-        // Chequear que el username no esté en la base de datos
-        [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [logId]);
-        if (rows.length > 0) {
+        // Chequear que el logId no esté en la base de datos
+        const [rowsLogId] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [logId]);
+        if (rowsLogId.length > 0) {
+            // LogId encontrado, rollback y devolver error
+            await connection.rollback();
             return res.status(400).json({ message: "Username ya registrado" });
         }
 
-        // Insertar en la tabla Funcionarios
+        // Insertar el logId y contraseña en la tabla Logins
         const passwordHash = await hashPassword(password);
+        await connection.query('INSERT INTO Logins (LogId, Password) VALUES (?, ?)', [logId, passwordHash]);
+
+        // Insertar en la tabla Funcionarios
         await connection.query('INSERT INTO Funcionarios (Ci, LogId) VALUES (?, ?)', [ci, logId]);
 
-        // Insertar el logId y contraseña en la tabla Logins
-        await connection.query('INSERT INTO Logins (LogId, Password) VALUES (?, ?)', [logId, passwordHash]);
+        // Confirmar la transacción
+        await connection.commit();
 
         return res.status(201).json({ message: "Registro exitoso" });
 
     } catch (error) {
         console.error(error);
+
+        // Rollback en caso de error
+        await connection.rollback();
+
         return res.status(500).json({ message: "Error al registrar" });
     }
 };
