@@ -1,5 +1,5 @@
 show databases;
--- drop database obligatorio_2023;
+ drop database proyecto;
 show tables;
 select * from Logins;
 select * from Funcionarios;

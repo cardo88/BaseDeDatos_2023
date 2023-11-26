@@ -53,3 +53,5 @@ UPDATE Funcionarios SET Nombre = 'NuevoNombre', Apellido = 'NuevoApellido', Fch_
 select * from Funcionarios;
 
 select * from Periodos_Actualizacion;
+
+select * from Logins;
