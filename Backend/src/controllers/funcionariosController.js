@@ -73,3 +73,38 @@ export const updateFuncionarioByCI = async (req, res) => {
         return res.status(500).json({ message: "Error al actualizar los datos del funcionario" });
     }
 };
+
+
+export const getFuncionarioByLogId = async (req, res) => {
+    const { logId } = req.query;
+
+    if (!logId) {
+        return res.status(400).json({ message: "El LogId es requerido" });
+    }
+
+    try {
+        // Obtener datos del funcionario por LogId
+        const [rows] = await connection.query('SELECT * FROM Funcionarios WHERE LogId = ?', [logId]);
+
+        if (rows.length > 0) {
+            // Crear una instancia de la clase Funcionario con los datos del funcionario
+            const funcionario = new Funcionario(
+                rows[0].Ci,
+                rows[0].Nombre,
+                rows[0].Apellido,
+                rows[0].Fch_Nacimiento,
+                rows[0].Dirección,
+                rows[0].Teléfono,
+                rows[0].Email,
+                rows[0].LogId
+            );
+
+            return res.status(200).json({ message: "Datos del funcionario obtenidos", funcionario });
+        } else {
+            return res.status(404).json({ message: "Funcionario no encontrado" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error al obtener los datos del funcionario" });
+    }
+};
