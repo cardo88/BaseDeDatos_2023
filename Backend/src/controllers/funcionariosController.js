@@ -4,7 +4,7 @@ import { getCurrentDate } from '../util/dateUtil.js';
 import { getCarnetSaludByCi } from './carnetController.js';
 
 
-export const getCarnetSalud = async (req, res) => {
+export const getFuncionarioByCI = async (req, res) => {
     const { ci } = req.query;
     console.log(req.query);
 
