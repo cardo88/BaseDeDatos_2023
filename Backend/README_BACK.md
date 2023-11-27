@@ -2,39 +2,54 @@
 
 ##Querys por http que recibe:
 
-- /api/auth/register
-    - request: post
-    - param: logId, password
-- /api/auth/login
-    - request: post
-    - param: ci, logId, password
+1. Logins
+    - /api/auth/register
+        - request: post
+        - param: logId, password
+    - /api/auth/login
+        - request: post
+        - param: ci, logId, password
 
-- /api/funcionarios/getFuncionarioByCI
-    - request: get
-    - param: ci
-- /api/funcionarios/updateFuncionarioByCI
-    - request: post
-    - param: ci, nombre, apellido, fechaNacimiento, direccion, telefono, email
-- /api/funcionarios/getFuncionarioByLogId
-    - request: get
-    - param: logId
+2. Funcionarios
+    - /api/funcionarios/getFuncionarioByCI
+        - request: get
+        - param: ci
+    - /api/funcionarios/updateFuncionarioByCI
+        - request: post
+        - param: ci, nombre, apellido, fechaNacimiento, direccion, telefono, email, conCarnet:false
+        - param: ci, nombre, apellido, fechaNacimiento, direccion, telefono, email, conCarnet:true, fechaEmision, fechaVencimiento, comprobante
+    - /api/funcionarios/getFuncionarioByLogId
+        - request: get
+        - param: logId
+    - /api/funcionarios/getFuncionariosSinCarnetSalud
+        - request: get
+        - param: n/a
 
-- /api/agenda/getAllRecords
-    - request: get
-    - param: n/a
-- /api/agenda/insertCita
-    - request: get
-    - param: ci, fechaAgenda
+3. Agenda
+    - /api/agenda/getAllRecords
+        - request: get
+        - param: n/a
+    - /api/agenda/insertCita
+        - request: get
+        - param: ci, fechaAgenda
 
-- /api/periodos/getAllPeriodos
-    - request: get
-    - param: n/a
-- /api/periodos/insertPeriodo
-    - request: post
-    - param: año, semestre, fechaInicio, fechaFin
-- /api/periodos/updatePeriodo
-    - request: post
-    - param: año, semestre, fechaInicio, fechaFin
+4. Periodos Actualización
+    - /api/periodos/getAllPeriodos
+        - request: get
+        - param: n/a
+    - /api/periodos/insertPeriodo
+        - request: post
+        - param: año, semestre, fechaInicio, fechaFin
+    - /api/periodos/updatePeriodo
+        - request: post
+        - param: año, semestre, fechaInicio, fechaFin
+
+5. Carnet Salud
+    - se hace todo mediante funcionarios
+
+
+
+
 
 
 
