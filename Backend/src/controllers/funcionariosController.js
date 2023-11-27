@@ -88,7 +88,6 @@ export const updateFuncionarioByCI = async (req, res) => {
 
 export const getFuncionarioByLogId = async (req, res) => {
     const { logId } = req.query;
-
     if (!logId) {
         return res.status(400).json({ message: "El logId es requerido" });
     }

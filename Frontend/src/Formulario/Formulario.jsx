@@ -2,21 +2,27 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useUser } from '../UserProvider';
 
 import { toast } from 'react-toastify';
 
 
 function Formulario() {
+
+    const { userData } = useUser();
+
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const tieneCarneSalud = watch("tieneCarneSalud");
     const [fechaNacimientoType, setFechaNacimientoType] = useState('text');
     const [fechaVencimientoType, setFechaVencimientoType] = useState('text');
     const [fechaEmisionType, setFechaEmisionType] = useState('text');
+    const [conCarnet, setConCarnet] = useState(false);
 
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
     const today = new Date();
+    data.conCarnet = conCarnet;
     const fechaVencimiento = new Date(data.fechaVencimientoCarne);
 
     if (fechaVencimiento < today) {
@@ -32,8 +38,7 @@ function Formulario() {
         }
       }
 
-
-    axios.post('http://localhost:3001/api/auth/register/', formData, {
+      axios.put(`http://localhost:3001/funcionarios/updateFuncionarioByCI`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -66,8 +71,9 @@ function Formulario() {
                 <input 
                     {...register('CI', { required: "Este campo es obligatorio", pattern: { value: /^[0-9]+$/i, message:"Solo se permiten numeros" }})} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="CI" 
-                />
+                    defaultValue={userData?.cedula}
+                    placeholder={userData?.cedula || "Cédula de identidad"}
+                    />
                 {errors.CI && <span className="text-red-600 text-sm">{errors.CI.message}</span>}
                 <input 
                     type={fechaNacimientoType} 
@@ -75,7 +81,8 @@ function Formulario() {
                     onBlur={() => setFechaNacimientoType('text')}
                     {...register('fechaNacimiento', { required: true })} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Fecha de nacimiento" 
+                    defaultValue={userData?.fechaNacimiento}
+                    placeholder={userData?.fechaNacimiento || "Fecha de nacimiento"}
                 />
                 {errors.fechaNacimiento && <span className="text-red-600 text-sm">Este campo es requerido</span>}
 
@@ -96,6 +103,15 @@ function Formulario() {
 
                 {tieneCarneSalud && (
                     <>
+                        <label className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            checked={conCarnet}
+                            onChange={() => setConCarnet(!conCarnet)}
+                            className="rounded text-blue-600 focus:ring-blue-500"
+                          />
+                          <span>¿Tiene carné de salud vigente?</span>
+                        </label>
                         <input 
                             type={fechaEmisionType}
                             onFocus={() => setFechaEmisionType('date')}
@@ -124,7 +140,8 @@ function Formulario() {
                 <input 
                     {...register('domicilio', { required: true })} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Domicilio completo de residencia" 
+                    defaultValue={userData?.direccion}
+                    placeholder={userData?.direccion || "Domicilio"} 
                 />
                 {errors.domicilio && <span className="text-red-600 text-sm">Este campo es requerido</span>}
 
@@ -132,7 +149,8 @@ function Formulario() {
                     type="email" 
                     {...register('correo', { required: true })} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Correo electrónico" 
+                    defaultValue={userData?.email}
+                    placeholder={userData?.email || "Correo electrónico"}
                 />
                 {errors.correo && <span className="text-red-600 text-sm">Este campo es requerido</span>}
 
@@ -145,7 +163,8 @@ function Formulario() {
                         message: "Solo se permiten números"
                       }
                     })} 
-                    placeholder="Teléfono de contacto" 
+                    defaultValue={userData?.telefono}
+                    placeholder={userData?.telefono || "Teléfono"}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 {errors.telefono && <span className="text-red-600 text-sm">{errors.telefono.message}</span>}   

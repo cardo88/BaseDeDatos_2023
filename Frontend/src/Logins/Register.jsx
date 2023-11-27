@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Register() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -8,20 +9,22 @@ function Register() {
     const password = watch('password');
 
   const onSubmit = handleSubmit((data) => {
-    const { logId, password, confirmPassword } = data;
+    const { logId, ci, password, confirmPassword } = data;
 
     if (password !== confirmPassword) {
         alert('Passwords do not match');
         return;
       }
 
-    axios.post('http://localhost:3001/api/auth/register/', { logId, password })
+    axios.post('http://localhost:3001/api/auth/register/', { logId, password, ci })
          .then(response => {
-             console.log('Registration successful:', response.data);
+             console.log('Register response:', response.data);
+             toast.success('Registration successful');
              navigate('/');
          })
          .catch(error => {
-             console.error('Register error:', error);
+            toast.error('Registration failed');
+            console.error('Register error:', error);
          });
   });
 
@@ -46,6 +49,17 @@ function Register() {
                 placeholder="Log ID"
               />
               {errors.logId && <span className="text-red-600"> Log ID is invalid </span>}
+            </div>
+            <div>
+              <label htmlFor="ci" className="text-sm font-bold text-gray-900 block"> CI </label>
+              <input 
+                {...register('ci', { required: true, minLength: 4, maxLength: 7 })}
+                id="ci"
+                type="text"
+                className="w-full p-2 border border-gray-300 rounded mt-1"
+                placeholder="Cedula Identidad"
+              />
+              {errors.ci && <span className="text-red-600"> CI is invalid </span>}
             </div>
             <div>
               <label htmlFor="password" className="text-sm font-bold text-gray-900 block"> Password </label>

@@ -1,22 +1,40 @@
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../UserProvider'; 
+import { toast } from 'react-toastify';
 
 function Login() {
+  const { setUserData } = useUser(); 
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((data) => {
     const { logId, password } = data;
+    const ci = logId;
     axios.post('http://localhost:3001/api/auth/login/', { logId, password })
-         .then(response => {
-             console.log('Login successful:', response.data);
-             navigate("/Indice");
-         })
-         .catch(error => {
-             console.error('Login error:', error);
-         });
+        .then(response => {
+            const {token} = response.data;
+            localStorage.setItem('token', token);
+
+            return axios.get(`http://localhost:3001/api/funcionarios/getFuncionarioByLogId?logId=${ci}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+        })
+        .then(response => {
+            const userData = response.data.funcionario;
+            setUserData({ ...userData });
+            toast.success('Login successful');
+            navigate("/Indice");
+        })
+        .catch(error => {
+            toast.error('Login failed');
+            console.error('Error:', error);
+        });
   });
+
 
   const goBack = () => {
     navigate(-1);
