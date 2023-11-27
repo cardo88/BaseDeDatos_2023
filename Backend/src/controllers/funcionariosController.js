@@ -1,10 +1,12 @@
 import connection from '../config/database.js';
 import Funcionario from '../models/Funcionario.js';
 import { getCurrentDate } from '../util/dateUtil.js';
+import { getCarnetSaludByCi } from './carnetController.js';
 
 
-export const getFuncionarioByCI = async (req, res) => {
+export const getCarnetSalud = async (req, res) => {
     const { ci } = req.query;
+    console.log(req.query);
 
     if (!ci) {
         return res.status(400).json({ message: "El número de cédula (CI) es requerido" });
@@ -12,22 +14,27 @@ export const getFuncionarioByCI = async (req, res) => {
 
     try {
         // Obtener datos del funcionario por CI
-        const [rows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
-        console.log(rows);
-        if (rows.length > 0) {
+        const [rowsFuncionario] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
+
+        if (rowsFuncionario.length > 0) {
             // Crear una instancia de la clase Funcionario con los datos del funcionario
             const funcionario = new Funcionario(
-                rows[0].Ci,
-                rows[0].Nombre,
-                rows[0].Apellido,
-                rows[0].Fch_Nacimiento,
-                rows[0].Dirección,
-                rows[0].Teléfono,
-                rows[0].Email,
-                rows[0].LogId
+                rowsFuncionario[0].Ci,
+                rowsFuncionario[0].Nombre,
+                rowsFuncionario[0].Apellido,
+                rowsFuncionario[0].Fch_Nacimiento,
+                rowsFuncionario[0].Dirección,
+                rowsFuncionario[0].Teléfono,
+                rowsFuncionario[0].Email,
+                rowsFuncionario[0].LogId
             );
 
-            return res.status(200).json({ message: "Datos del funcionario obtenidos", funcionario });
+            // Obtener el carnet de salud por CI
+            console.log("ci: "+ci);
+            const carnetResult = await getCarnetSaludByCi(ci);
+
+            // Retornar solo los datos del funcionario y agregar los datos del carnet
+            return res.status(200).json({ message: "Datos del funcionario y carnet obtenidos", funcionario, carnet: carnetResult.carnet });
         } else {
             return res.status(404).json({ message: "Funcionario no encontrado" });
         }
@@ -46,19 +53,19 @@ export const updateFuncionarioByCI = async (req, res) => {
 
     try {
         // Verificar si la fecha actual está dentro de algún periodo de actualización
-        const [periodos] = await connection.query('SELECT * FROM Periodos_Actualizacion WHERE ? BETWEEN Fch_Inicio AND Fch_Fin', [currentDate]);
+        const [querySelectPeriodos] = await connection.query('SELECT * FROM Periodos_Actualizacion WHERE ? BETWEEN Fch_Inicio AND Fch_Fin', [currentDate]);
 
-        if (periodos.length === 0) {
+        if (querySelectPeriodos.length === 0) {
             return res.status(400).json({ message: "No se puede actualizar fuera de los periodos de actualización" });
         }
 
         // Realizar la actualización del funcionario
-        const [result] = await connection.query(
+        const [queryUpdateFuncionario] = await connection.query(
             'UPDATE Funcionarios SET Nombre = ?, Apellido = ?, Fch_Nacimiento = ?, Dirección = ?, Teléfono = ?, Email = ? WHERE Ci = ?',
             [nombre, apellido, fechaNacimiento, direccion, telefono, email, ci]
         );
-        console.log(result);
-        if (result.affectedRows > 0) {
+
+        if (queryUpdateFuncionario.affectedRows > 0) {
             // Obtener y devolver los nuevos datos del funcionario actualizado
             const [updatedRows] = await connection.query('SELECT * FROM Funcionarios WHERE Ci = ?', [ci]);
 
@@ -77,6 +84,10 @@ export const updateFuncionarioByCI = async (req, res) => {
                 return res.status(200).json({ message: "Funcionario actualizado exitosamente", funcionario });
             }
         }
+
+        // Insertar datos del carnet de salud
+        //const [queryUpdateCarnet] = await updateCarnetSaludByCI(req, res);
+
 
         return res.status(404).json({ message: "Funcionario no encontrado o no se pudo actualizar" });
     } catch (error) {
