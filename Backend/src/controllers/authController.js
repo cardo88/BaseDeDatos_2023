@@ -77,7 +77,6 @@ export const login = async (req, res) => {
     // Chequea si el logId y la contraseña coinciden con los de la base de datos
     try {
         const [rows] = await connection.query('SELECT * FROM Logins WHERE LogId = ?', [logId]);
-        //console.log("llegó");
         if (rows.length > 0) {
             // Chequea si la contraseña coincide
             const passwordHash = rows[0].Password;
