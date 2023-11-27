@@ -16,10 +16,10 @@ CREATE TABLE Funcionarios (
     Nombre VARCHAR(50),
     Apellido VARCHAR(50),
     Fch_Nacimiento DATE,
-    Dirección VARCHAR(255),
-    Teléfono VARCHAR(15),
+    Direccion VARCHAR(255),
+    Telefono VARCHAR(15),
     Email VARCHAR(255),
-    LogId VARCHAR(255) NOT NULL, -- SE ASUME QUE PRIMERO SE REGISTRA
+    LogId VARCHAR(255) NOT NULL,
     FOREIGN KEY (LogId) REFERENCES Logins(LogId)
 );
 
