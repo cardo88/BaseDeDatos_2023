@@ -48,4 +48,17 @@ CALL InsertarCarnetConImagen(11223344, '2022-12-01', '2023-12-01', '/home/docker
 select * from Carnet_Salud;
 
 
+UPDATE Funcionarios SET Nombre = 'NuevoNombre', Apellido = 'NuevoApellido', Fch_Nacimiento = '1990-01-01', Teléfono = 'NuevaDirección', Email = 'nuevo@email.com' WHERE Ci = 1234567;
 
+select * from Funcionarios;
+
+select * from Periodos_Actualizacion;
+
+select * from Logins;
+
+select * from Carnet_Salud;
+
+SELECT F.*
+FROM Funcionarios F
+LEFT JOIN Carnet_Salud CS ON F.Ci = CS.Ci
+WHERE CS.Ci IS NULL OR CS.Fch_Vencimiento < CURRENT_DATE();

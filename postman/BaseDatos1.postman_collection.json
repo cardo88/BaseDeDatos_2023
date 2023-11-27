@@ -1,0 +1,501 @@
+{
+	"info": {
+		"_postman_id": "f351607e-3d52-42ba-9f9b-d4d9fbfd9acc",
+		"name": "BaseDatos1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30700332"
+	},
+	"item": [
+		{
+			"name": "agenda/getAllRecords",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzAwOTQ4MzYwLCJleHAiOjE3MDA5NTE5NjB9.rpbPzrejrgiVtLJzypC3QgfXjWI1EoPdYj-F7NPkMXw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/agenda/getAllRecords",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"agenda",
+						"getAllRecords"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"logId\": \"user1\", \"password\": \"password1\"}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "agenda/insertCita",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzAxMDAzNzEyLCJleHAiOjE3MDEwMDczMTJ9.-n5MaYqh0NooFgmgGFGjGSZhpqMSNfQj_2zLvvC5xOw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"ci\": 1234567, \"fechaAgenda\": \"2023-10-08\"}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/agenda/insertCita",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"agenda",
+						"insertCita"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "funcionarios/updateFuncionarioByCI",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzAxMDAwMDcwLCJleHAiOjE3MDEwMDM2NzB9.BtM4Bs1kzXEryHEIHad-YKWrMQBarbbNjlNJwInVT_I",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ci\":2345678,\r\n    \"nombre\": \"NuevoNombre\",\r\n    \"apellido\": \"NuevoApellido\",\r\n    \"fechaNacimiento\": \"1990-01-01\",\r\n    \"direccion\": \"NuevaDirección\",\r\n    \"telefono\": \"NuevoTeléfono\",\r\n    \"email\": \"nuevo@email.com\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/funcionarios/updateFuncionarioByCI",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"funcionarios",
+						"updateFuncionarioByCI"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "funcionarios/getFuncionarioByCI",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzAwOTk2MjQxLCJleHAiOjE3MDA5OTk4NDF9.ZksKWJKxd4xp2ai0YoWEYgL4xsNZcyDZw6wU9nBC8QA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ci\": 3456789\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/funcionarios/getFuncionarioByCI?ci=3456789",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"funcionarios",
+						"getFuncionarioByCI"
+					],
+					"query": [
+						{
+							"key": "ci",
+							"value": "3456789"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ci\": 88888,\r\n    \"logId\": \"pepe2\",\r\n    \"password\": \"pepe123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "funcionarios/getFuncionarioByLogId",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBlcGUyIiwiaWF0IjoxNzAxMDI3MjU2LCJleHAiOjE3MDEwMzA4NTZ9.OJ8qI1ucWwH0DhUQ_NTpTlT8wOuWXyo5Qts4R8e-Jjk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/funcionarios/getFuncionarioByLogId?logId=user1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"funcionarios",
+						"getFuncionarioByLogId"
+					],
+					"query": [
+						{
+							"key": "logId",
+							"value": "user1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "periodos/getAllPeriodos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzAxMDAzNzEyLCJleHAiOjE3MDEwMDczMTJ9.-n5MaYqh0NooFgmgGFGjGSZhpqMSNfQj_2zLvvC5xOw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/api/periodos/getAllPeriodos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"periodos",
+						"getAllPeriodos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "periodos/insertPeriodo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzAxMDAzNzEyLCJleHAiOjE3MDEwMDczMTJ9.-n5MaYqh0NooFgmgGFGjGSZhpqMSNfQj_2zLvvC5xOw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"año\": 2024,\r\n  \"semestre\": 2,\r\n  \"fechaInicio\": \"2024-08-01\",\r\n  \"fechaFin\": \"2024-12-05\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/periodos/insertPeriodo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"periodos",
+						"insertPeriodo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "periodos/updatePeriodo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzAxMDAzNzEyLCJleHAiOjE3MDEwMDczMTJ9.-n5MaYqh0NooFgmgGFGjGSZhpqMSNfQj_2zLvvC5xOw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"año\": 2024,\r\n  \"semestre\": 2,\r\n  \"fechaInicio\": \"2024-08-01\",\r\n  \"fechaFin\": \"2024-12-20\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/periodos/updatePeriodo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"periodos",
+						"updatePeriodo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "carnet/createCarnetSalud",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzAxMDI3NDU5LCJleHAiOjE3MDEwMzEwNTl9.lMZMgE-Yn_vCZErldogIHpHXt62ciKNna3NgU9hVYfg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "Ci",
+							"value": "99999",
+							"type": "text"
+						},
+						{
+							"key": "Fch_Emision",
+							"value": "2023-06-01",
+							"type": "text"
+						},
+						{
+							"key": "Fch_Vencimiento",
+							"value": "2023-12-20",
+							"type": "text"
+						},
+						{
+							"key": "Comprobante",
+							"type": "file",
+							"src": "C:\\Users\\RicardoCastro\\Pictures\\chatarra\\ucu_borde_negro.png"
+						}
+					],
+					"options": {
+						"formdata": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/carnet/createCarnetSalud",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"carnet",
+						"createCarnetSalud"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "carnet/createCarnetSaludByCi",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNzAxMDI3NDU5LCJleHAiOjE3MDEwMzEwNTl9.lMZMgE-Yn_vCZErldogIHpHXt62ciKNna3NgU9hVYfg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "ci",
+							"value": "99999",
+							"type": "text"
+						},
+						{
+							"key": "fechaEmision",
+							"value": "2023-06-01",
+							"type": "text"
+						},
+						{
+							"key": "fechaVencimiento",
+							"value": "2023-12-20",
+							"type": "text"
+						},
+						{
+							"key": "comprobante",
+							"type": "file",
+							"src": "C:\\Users\\RicardoCastro\\Pictures\\chatarra\\ucu_borde_negro.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/carnet/createCarnetSaludByCi",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"carnet",
+						"createCarnetSaludByCi"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

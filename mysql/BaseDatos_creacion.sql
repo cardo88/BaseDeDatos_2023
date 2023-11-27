@@ -13,13 +13,13 @@ CREATE TABLE Logins (
 -- Crear la tabla Funcionarios
 CREATE TABLE Funcionarios (
     Ci INT PRIMARY KEY,
-    Nombre VARCHAR(50) NOT NULL,
-    Apellido VARCHAR(50) NOT NULL,
-    Fch_Nacimiento DATE NOT NULL,
-    Dirección VARCHAR(255),
-    Teléfono VARCHAR(15),
+    Nombre VARCHAR(50),
+    Apellido VARCHAR(50),
+    Fch_Nacimiento DATE,
+    Direccion VARCHAR(255),
+    Telefono VARCHAR(15),
     Email VARCHAR(255),
-    LogId VARCHAR(255) NOT NULL, -- SE ASUME QUE PRIMERO SE REGISTRA
+    LogId VARCHAR(255) NOT NULL,
     FOREIGN KEY (LogId) REFERENCES Logins(LogId)
 );
 
