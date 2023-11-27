@@ -55,3 +55,10 @@ select * from Funcionarios;
 select * from Periodos_Actualizacion;
 
 select * from Logins;
+
+select * from Carnet_Salud;
+
+SELECT F.*
+FROM Funcionarios F
+LEFT JOIN Carnet_Salud CS ON F.Ci = CS.Ci
+WHERE CS.Ci IS NULL OR CS.Fch_Vencimiento < CURRENT_DATE();

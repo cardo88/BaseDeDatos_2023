@@ -10,6 +10,7 @@ INSERT INTO Funcionarios (Ci, Nombre, Apellido, Fch_Nacimiento, Dirección, Tel�
 (2345678, 'María', 'Gómez', '1985-05-20', 'Avenida 456, Ciudad', 5555678, 'maria.gomez@email.com', 'user2'),
 (3456789, 'Carlos', 'López', '1988-08-10', 'Calle 789, Ciudad', 5559012, 'carlos.lopez@email.com', 'user3');
 
+
 -- Insertar datos en la tabla Agenda
 INSERT INTO Agenda (Nro, Ci, Fch_Agenda) VALUES
 (1, 1234567, '2023-01-05'),
