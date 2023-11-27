@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useUser } from '../UserProvider';
 
 import { toast } from 'react-toastify';
+import { api } from '../api/instance';
 
 
 function Formulario() {
@@ -13,16 +14,14 @@ function Formulario() {
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const navigate = useNavigate();
-    const tieneCarneSalud = watch("tieneCarneSalud");
+    const conCarnet = watch("conCarnet");
     const [fechaNacimientoType, setFechaNacimientoType] = useState('text');
     const [fechaVencimientoType, setFechaVencimientoType] = useState('text');
     const [fechaEmisionType, setFechaEmisionType] = useState('text');
-    const [conCarnet, setConCarnet] = useState(false);
 
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
     const today = new Date();
-    data.conCarnet = conCarnet;
     const fechaVencimiento = new Date(data.fechaVencimientoCarne);
 
     if (fechaVencimiento < today) {
@@ -38,13 +37,9 @@ function Formulario() {
         }
       }
 
-      axios.put(`http://localhost:3001/funcionarios/updateFuncionarioByCI`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      api.put(`/funcionarios/updateFuncionarioByCI`, formData)
       .then(response => {
-        console.log('Formulario enviado con éxito:', response.data);
+        toast.success('Formulario enviado con éxito');
         navigate('/Index');
       })
       .catch(error => {
@@ -69,10 +64,24 @@ function Formulario() {
         <form onSubmit={onSubmit} className="space-y-6" encType="multipart/form-data">
             <div className='flex flex-col space-y-4'>
                 <input 
-                    {...register('CI', { required: "Este campo es obligatorio", pattern: { value: /^[0-9]+$/i, message:"Solo se permiten numeros" }})} 
+                    {...register('ci', { required: "Este campo es obligatorio", pattern: { value: /^[0-9]+$/i, message:"Solo se permiten numeros" }})} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     defaultValue={userData?.cedula}
                     placeholder={userData?.cedula || "Cédula de identidad"}
+                    />
+                {errors.CI && <span className="text-red-600 text-sm">{errors.CI.message}</span>}
+                <input 
+                    {...register('nombre', { required: "Este campo es obligatorio"})} 
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    defaultValue={userData?.nombre}
+                    placeholder={userData?.nombre || "Nombre"}
+                    />
+                {errors.CI && <span className="text-red-600 text-sm">{errors.CI.message}</span>}
+                <input 
+                    {...register('apellido', { required: "Este campo es obligatorio"})} 
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    defaultValue={userData?.apellido}
+                    placeholder={userData?.apellido || "Apellido"}
                     />
                 {errors.CI && <span className="text-red-600 text-sm">{errors.CI.message}</span>}
                 <input 
@@ -89,7 +98,7 @@ function Formulario() {
                 <label className="flex items-center space-x-2">
                     <input 
                         type="checkbox" 
-                        {...register('tieneCarneSalud')} 
+                        {...register('conCarnet')} 
                         className="rounded text-blue-600 focus:ring-blue-500"
                     />
                     <span>¿Tiene carné de salud?</span>
@@ -101,17 +110,8 @@ function Formulario() {
                     </span>
                 </label>
 
-                {tieneCarneSalud && (
+                {conCarnet && (
                     <>
-                        <label className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            checked={conCarnet}
-                            onChange={() => setConCarnet(!conCarnet)}
-                            className="rounded text-blue-600 focus:ring-blue-500"
-                          />
-                          <span>¿Tiene carné de salud vigente?</span>
-                        </label>
                         <input 
                             type={fechaEmisionType}
                             onFocus={() => setFechaEmisionType('date')}
@@ -130,7 +130,7 @@ function Formulario() {
                         />
                         <input 
                             type="file" 
-                            {...register('carnetJPG')} 
+                            {...register('comprobante')} 
                             accept="image/jpeg, image/png" 
                             className="file:mr-4 file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                         />
@@ -138,7 +138,7 @@ function Formulario() {
                 )}
 
                 <input 
-                    {...register('domicilio', { required: true })} 
+                    {...register('direccion', { required: true })} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     defaultValue={userData?.direccion}
                     placeholder={userData?.direccion || "Domicilio"} 
@@ -147,7 +147,7 @@ function Formulario() {
 
                 <input 
                     type="email" 
-                    {...register('correo', { required: true })} 
+                    {...register('email', { required: true })} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     defaultValue={userData?.email}
                     placeholder={userData?.email || "Correo electrónico"}

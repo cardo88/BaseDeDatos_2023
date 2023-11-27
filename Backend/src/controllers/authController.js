@@ -83,7 +83,10 @@ export const login = async (req, res) => {
             if (compararPassword(password, passwordHash)) {
                 // Login exitoso
                 const token = generarTokenDeUsuario(logId);
-                res.json({ token });
+                res.cookie('token', token, {
+                    secure: true,
+                })
+                res.send();
             } else {
                 // Contraseña incorrecta
                 return res.status(400).json({ message: "Usuario o contraseña incorrectos" });

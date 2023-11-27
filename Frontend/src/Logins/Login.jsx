@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserProvider'; 
 import { toast } from 'react-toastify';
+import { api } from '../api/instance';
 
 function Login() {
   const { setUserData } = useUser(); 
@@ -12,27 +13,22 @@ function Login() {
   const onSubmit = handleSubmit((data) => {
     const { logId, password } = data;
     const ci = logId;
-    axios.post('http://localhost:3001/api/auth/login/', { logId, password })
-        .then(response => {
-            const {token} = response.data;
-            localStorage.setItem('token', token);
-
-            return axios.get(`http://localhost:3001/api/funcionarios/getFuncionarioByLogId?logId=${ci}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-        })
-        .then(response => {
-            const userData = response.data.funcionario;
-            setUserData({ ...userData });
-            toast.success('Login successful');
-            navigate("/Indice");
-        })
-        .catch(error => {
-            toast.error('Login failed');
-            console.error('Error:', error);
-        });
+    api.post('/auth/login', { logId, password }).then(_ => {
+      return api.get(`/funcionarios/getFuncionarioByLogId`,{
+        params: {
+          logId: ci
+        } 
+      });
+    }
+    ).then(response => {
+      const userData = response.data.funcionario;
+      setUserData({ ...userData });
+      toast.success('Login successful');
+      navigate("/Indice");
+    }).catch(error => {
+      toast.error('Login failed');
+      console.error('Error:', error);
+    });
   });
 
 
