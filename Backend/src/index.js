@@ -8,6 +8,7 @@ import errorHandler from './middlewares/errorMiddleware.js';
 import agenda from './routes/agendaRoutes.js';
 import funcionarios from './routes/funcionariosRoutes.js';
 import periodos from './routes/periodosRoutes.js';
+import carnet from './routes/carnetRoutes.js';
 
 const app = express();
 app.use(cors());
@@ -23,6 +24,7 @@ app.use(verificarToken);
 app.use('/api/agenda', agenda);
 app.use('/api/funcionarios', funcionarios);
 app.use('/api/periodos', periodos);
+app.use('/api/carnet/', carnet);
 
 
 // Middleware de manejo de errores

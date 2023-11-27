@@ -17,7 +17,8 @@ services:
     volumes:
       - ./Backend:/usr/src/app # Monta el código fuente
       - /usr/src/app/node_modules # Evita que el volumen sobrescriba node_modules
-    command: npx nodemon src/index.js # Asumiendo que tu archivo principal es index.js
+    # command: npx nodemon src/index.js # Asumiendo que tu archivo principal es index.js
+    # command: npm run start
     depends_on:
       - db
     environment:
