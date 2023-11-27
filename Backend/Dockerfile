@@ -19,4 +19,8 @@ COPY . .
 EXPOSE 3001
 
 # Comando para ejecutar la aplicación usando `nodemon`
-CMD ["npx", "nodemon", "src/index.js"]
+# CMD ["npx", "nodemon", "src/index.js"]
+ CMD [ "npm", "run", "start" ]
+# CMD ["npx", "start"]
+# CMD ["./node_modules/.bin/nodemon", "src/index.js"]
+
