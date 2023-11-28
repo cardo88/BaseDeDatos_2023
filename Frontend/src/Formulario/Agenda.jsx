@@ -3,14 +3,32 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { api } from '../api/instance';
+import { useUser } from '../UserProvider';
+import dayjs from 'dayjs';
+
 
 function Agenda() {
-  const [fechaReserva, setFechaReserva] = useState(new Date());
+  const { userData } = useUser();
+  const [fechaAgenda, setFechaReserva] = useState(new Date());
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    toast.success("Reserva de agenda realizada con éxito.");
-    console.log(fechaReserva);
+    const formattedDate = dayjs(fechaAgenda).format('YYYY-DD-MM');
+
+      api.post('/agenda/insertCita', { fechaAgenda: formattedDate, ci: userData.cedula })
+      .then(response => {
+        toast.success("Reserva de agenda realizada con éxito.");
+        console.log(response.data);
+        navigate('/Indice');
+      })
+      .catch(error => {
+        console.error('Error al realizar la reserva de agenda:', error);
+        toast.error("Error al realizar la reserva de agenda. Por favor, inténtalo de nuevo.");
+      });
+  };
+
+  const goBack = () => {
     navigate('/Indice');
   };
 
@@ -20,7 +38,7 @@ function Agenda() {
         <div className="text-3xl font-bold text-gray-900 mt-2 text-center">Reservar Agenda</div>
         <div className="mt-4 w-full bg-white p-8 border border-gray-300">
           <DatePicker
-            selected={fechaReserva}
+            selected={fechaAgenda}
             onChange={(date) => setFechaReserva(date)}
             minDate={new Date()} 
             className="w-full p-3 border border-gray-300 rounded-lg text-lg"
@@ -33,6 +51,15 @@ function Agenda() {
           >
             Confirmar Reserva
           </button>
+          <div className="flex justify-center mt-4">
+          <button
+              type="button" 
+              onClick={goBack}
+              className="py-2 px-2 bg-gray-500 hover:bg-gray-600 rounded-md text-white font-bold text-xs"
+              >
+              Volver
+            </button>
+          </div>
         </div>
       </div>
     </div>

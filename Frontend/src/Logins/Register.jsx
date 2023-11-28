@@ -29,7 +29,7 @@ function Register() {
   });
 
   const goBack = () => {
-    navigate(-1);
+    navigate('/');
   };
 
   return (

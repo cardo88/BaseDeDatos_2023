@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useUser } from '../UserProvider';
+import dayjs from 'dayjs';
 
 import { toast } from 'react-toastify';
 import { api } from '../api/instance';
@@ -11,6 +11,7 @@ import { api } from '../api/instance';
 function Formulario() {
 
     const { userData } = useUser();
+    const fechaParseada = dayjs(userData.fechaNacimiento).format('YYYY-MM-DD');
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ function Formulario() {
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
     const today = new Date();
-    const fechaVencimiento = new Date(data.fechaVencimientoCarne);
+    const fechaVencimiento = new Date(data.fechaVencimiento);
 
     if (fechaVencimiento < today) {
         toast.error("La fecha de vencimiento es anterior a la fecha actual. Necesitas hacer una reserva de agenda.");
@@ -40,7 +41,7 @@ function Formulario() {
       api.put(`/funcionarios/updateFuncionarioByCI`, formData)
       .then(response => {
         toast.success('Formulario enviado con éxito');
-        navigate('/Index');
+        navigate('/Indice');
       })
       .catch(error => {
         console.error('Error al enviar formulario:', error);
@@ -90,9 +91,9 @@ function Formulario() {
                     onBlur={() => setFechaNacimientoType('text')}
                     {...register('fechaNacimiento', { required: true })} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    defaultValue={userData?.fechaNacimiento}
-                    placeholder={userData?.fechaNacimiento || "Fecha de nacimiento"}
-                />
+                    defaultValue={fechaParseada !== undefined && fechaParseada !== "Invalid Date" ? fechaParseada : null}
+                    placeholder="Fecha de nacimiento"
+                    />
                 {errors.fechaNacimiento && <span className="text-red-600 text-sm">Este campo es requerido</span>}
 
                 <label className="flex items-center space-x-2">
@@ -116,7 +117,7 @@ function Formulario() {
                             type={fechaEmisionType}
                             onFocus={() => setFechaEmisionType('date')}
                             onBlur={() => setFechaEmisionType('text')}
-                            {...register('fechaEmisionCarne')} 
+                            {...register('fechaEmision')} 
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Fecha de emisión del carné" 
                         />
@@ -124,7 +125,7 @@ function Formulario() {
                             type={fechaVencimientoType}
                             onFocus={() => setFechaVencimientoType('date')}
                             onBlur={() => setFechaVencimientoType('text')}
-                            {...register('fechaVencimientoCarne')} 
+                            {...register('fechaVencimiento')} 
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Fecha de vencimiento del carné" 
                         />

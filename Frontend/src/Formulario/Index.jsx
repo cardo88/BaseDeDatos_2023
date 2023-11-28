@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 function Index() {
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/Login');
+  }
+
+
   return (
     <div className="flex h-screen">
       <div className="m-auto space-y-4">
@@ -19,6 +25,12 @@ function Index() {
         >
           {/* <UclassName="h-6 w-6 mr-2" /> */}
           Agenda
+        </button>
+        <button 
+          onClick={handleLogout}
+          className="flex items-center justify-center w-64 h-20 bg-red-500 text-white text-lg rounded-md shadow-lg hover:bg-red-700"
+        >
+          Cerrar sesión
         </button>
       </div>
     </div>

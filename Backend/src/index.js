@@ -12,7 +12,7 @@ import funcionarios from './routes/funcionariosRoutes.js';
 import periodos from './routes/periodosRoutes.js';
 import carnet from './routes/carnetRoutes.js';
 
-const allowedOrigin = process.env.FRONTEND_HOST ?? 'http://localhost:5173';
+const allowedOrigin = process.env.FRONTEND_HOST ?? 'http://localhost:5174';
 
 const app = express();
 app.use(cookieParser());
