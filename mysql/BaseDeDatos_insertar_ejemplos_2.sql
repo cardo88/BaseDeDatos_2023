@@ -5,10 +5,11 @@ INSERT INTO Logins (LogId, Password) VALUES
 ('user3', 'password3');
 
 -- Insertar datos en la tabla Funcionarios
-INSERT INTO Funcionarios (Ci, Nombre, Apellido, Fch_Nacimiento, Direccion, Telefono, Email, LogId) VALUES
-(1234567, 'Juan', 'Pérez', '1990-01-15', 'Calle 123, Ciudad', '555-1234', 'juan.perez@email.com', 'user1'),
-(2345678, 'María', 'Gómez', '1985-05-20', 'Avenida 456, Ciudad', '555-5678', 'maria.gomez@email.com', 'user2'),
-(3456789, 'Carlos', 'López', '1988-08-10', 'Calle 789, Ciudad', '555-9012', 'carlos.lopez@email.com', 'user3');
+INSERT INTO Funcionarios (Ci, Nombre, Apellido, Fch_Nacimiento, Dirección, Teléfono, Email, LogId) VALUES
+(1234567, 'Juan', 'Pérez', '1990-01-15', 'Calle 123, Ciudad', 5551234, 'juan.perez@email.com', 'user1'),
+(2345678, 'María', 'Gómez', '1985-05-20', 'Avenida 456, Ciudad', 5555678, 'maria.gomez@email.com', 'user2'),
+(3456789, 'Carlos', 'López', '1988-08-10', 'Calle 789, Ciudad', 5559012, 'carlos.lopez@email.com', 'user3');
+
 
 -- Insertar datos en la tabla Agenda
 INSERT INTO Agenda (Nro, Ci, Fch_Agenda) VALUES

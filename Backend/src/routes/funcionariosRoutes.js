@@ -3,8 +3,9 @@ import { getFuncionarioByCI, updateFuncionarioByCI, getFuncionarioByLogId, getFu
 
 const router = express.Router();
 
+
 router.get('/getFuncionarioByCI', getFuncionarioByCI);
-router.post('/updateFuncionarioByCI', updateFuncionarioByCI);
+router.put('/updateFuncionarioByCI', updateFuncionarioByCI);
 router.get('/getFuncionarioByLogId', getFuncionarioByLogId);
 router.get('/getFuncionariosSinCarnetSalud', getFuncionariosSinCarnetSalud);
 

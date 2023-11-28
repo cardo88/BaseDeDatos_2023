@@ -1,15 +1,21 @@
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useUser } from '../UserProvider';
+import dayjs from 'dayjs';
 
 import { toast } from 'react-toastify';
+import { api } from '../api/instance';
 
 
 function Formulario() {
+
+    const { userData } = useUser();
+    const fechaParseada = dayjs(userData.fechaNacimiento).format('YYYY-MM-DD');
+
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const navigate = useNavigate();
-    const tieneCarneSalud = watch("tieneCarneSalud");
+    const conCarnet = watch("conCarnet");
     const [fechaNacimientoType, setFechaNacimientoType] = useState('text');
     const [fechaVencimientoType, setFechaVencimientoType] = useState('text');
     const [fechaEmisionType, setFechaEmisionType] = useState('text');
@@ -17,7 +23,7 @@ function Formulario() {
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
     const today = new Date();
-    const fechaVencimiento = new Date(data.fechaVencimientoCarne);
+    const fechaVencimiento = new Date(data.fechaVencimiento);
 
     if (fechaVencimiento < today) {
         toast.error("La fecha de vencimiento es anterior a la fecha actual. Necesitas hacer una reserva de agenda.");
@@ -32,15 +38,10 @@ function Formulario() {
         }
       }
 
-
-    axios.post('http://localhost:3001/api/auth/register/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      api.put(`/funcionarios/updateFuncionarioByCI`, formData)
       .then(response => {
-        console.log('Formulario enviado con éxito:', response.data);
-        navigate('/Index');
+        toast.success('Formulario enviado con éxito');
+        navigate('/Indice');
       })
       .catch(error => {
         console.error('Error al enviar formulario:', error);
@@ -64,10 +65,25 @@ function Formulario() {
         <form onSubmit={onSubmit} className="space-y-6" encType="multipart/form-data">
             <div className='flex flex-col space-y-4'>
                 <input 
-                    {...register('CI', { required: "Este campo es obligatorio", pattern: { value: /^[0-9]+$/i, message:"Solo se permiten numeros" }})} 
+                    {...register('ci', { required: "Este campo es obligatorio", pattern: { value: /^[0-9]+$/i, message:"Solo se permiten numeros" }})} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="CI" 
-                />
+                    defaultValue={userData?.cedula}
+                    placeholder={userData?.cedula || "Cédula de identidad"}
+                    />
+                {errors.CI && <span className="text-red-600 text-sm">{errors.CI.message}</span>}
+                <input 
+                    {...register('nombre', { required: "Este campo es obligatorio"})} 
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    defaultValue={userData?.nombre}
+                    placeholder={userData?.nombre || "Nombre"}
+                    />
+                {errors.CI && <span className="text-red-600 text-sm">{errors.CI.message}</span>}
+                <input 
+                    {...register('apellido', { required: "Este campo es obligatorio"})} 
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    defaultValue={userData?.apellido}
+                    placeholder={userData?.apellido || "Apellido"}
+                    />
                 {errors.CI && <span className="text-red-600 text-sm">{errors.CI.message}</span>}
                 <input 
                     type={fechaNacimientoType} 
@@ -75,14 +91,15 @@ function Formulario() {
                     onBlur={() => setFechaNacimientoType('text')}
                     {...register('fechaNacimiento', { required: true })} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Fecha de nacimiento" 
-                />
+                    defaultValue={fechaParseada !== undefined && fechaParseada !== "Invalid Date" ? fechaParseada : null}
+                    placeholder="Fecha de nacimiento"
+                    />
                 {errors.fechaNacimiento && <span className="text-red-600 text-sm">Este campo es requerido</span>}
 
                 <label className="flex items-center space-x-2">
                     <input 
                         type="checkbox" 
-                        {...register('tieneCarneSalud')} 
+                        {...register('conCarnet')} 
                         className="rounded text-blue-600 focus:ring-blue-500"
                     />
                     <span>¿Tiene carné de salud?</span>
@@ -94,13 +111,13 @@ function Formulario() {
                     </span>
                 </label>
 
-                {tieneCarneSalud && (
+                {conCarnet && (
                     <>
                         <input 
                             type={fechaEmisionType}
                             onFocus={() => setFechaEmisionType('date')}
                             onBlur={() => setFechaEmisionType('text')}
-                            {...register('fechaEmisionCarne')} 
+                            {...register('fechaEmision')} 
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Fecha de emisión del carné" 
                         />
@@ -108,13 +125,13 @@ function Formulario() {
                             type={fechaVencimientoType}
                             onFocus={() => setFechaVencimientoType('date')}
                             onBlur={() => setFechaVencimientoType('text')}
-                            {...register('fechaVencimientoCarne')} 
+                            {...register('fechaVencimiento')} 
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Fecha de vencimiento del carné" 
                         />
                         <input 
                             type="file" 
-                            {...register('carnetJPG')} 
+                            {...register('comprobante')} 
                             accept="image/jpeg, image/png" 
                             className="file:mr-4 file:border-0 file:text-sm file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                         />
@@ -122,17 +139,19 @@ function Formulario() {
                 )}
 
                 <input 
-                    {...register('domicilio', { required: true })} 
+                    {...register('direccion', { required: true })} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Domicilio completo de residencia" 
+                    defaultValue={userData?.direccion}
+                    placeholder={userData?.direccion || "Domicilio"} 
                 />
                 {errors.domicilio && <span className="text-red-600 text-sm">Este campo es requerido</span>}
 
                 <input 
                     type="email" 
-                    {...register('correo', { required: true })} 
+                    {...register('email', { required: true })} 
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Correo electrónico" 
+                    defaultValue={userData?.email}
+                    placeholder={userData?.email || "Correo electrónico"}
                 />
                 {errors.correo && <span className="text-red-600 text-sm">Este campo es requerido</span>}
 
@@ -145,7 +164,8 @@ function Formulario() {
                         message: "Solo se permiten números"
                       }
                     })} 
-                    placeholder="Teléfono de contacto" 
+                    defaultValue={userData?.telefono}
+                    placeholder={userData?.telefono || "Teléfono"}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 {errors.telefono && <span className="text-red-600 text-sm">{errors.telefono.message}</span>}   

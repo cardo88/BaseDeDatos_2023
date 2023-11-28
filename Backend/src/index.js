@@ -1,6 +1,8 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 
 import authRoutes from './routes/authRoutes.js';
 import verificarToken from './middlewares/authMiddleware.js';
@@ -10,9 +12,17 @@ import funcionarios from './routes/funcionariosRoutes.js';
 import periodos from './routes/periodosRoutes.js';
 import carnet from './routes/carnetRoutes.js';
 
+const allowedOrigin = process.env.FRONTEND_HOST ?? 'http://localhost:5174';
+
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+    origin: allowedOrigin,
+    credentials: true,
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 // Rutas públicas que no requieren autenticación
 app.use('/api/auth', authRoutes);

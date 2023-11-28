@@ -99,8 +99,8 @@ export const getFuncionarioByLogId = async (req, res) => {
 
 
 export const updateFuncionarioByCI = async (req, res) => {
-    console.log(req.body.Apellido);
     const { ci, nombre, apellido, fechaNacimiento, direccion, telefono, email, conCarnet } = req.body;
+    console.log(req.body);
 
     // Obtener la fecha actual
     const currentDate = getCurrentDate();
@@ -115,7 +115,7 @@ export const updateFuncionarioByCI = async (req, res) => {
 
         // Realizar la actualización del funcionario
         const [queryUpdateFuncionario] = await connection.query(
-            'UPDATE Funcionarios SET Nombre = ?, Apellido = ?, Fch_Nacimiento = ?, Direccion = ?, Telefono = ?, Email = ? WHERE Ci = ?',
+            'UPDATE Funcionarios SET Nombre = ?, Apellido = ?, Fch_Nacimiento = ?, Dirección = ?, Teléfono = ?, Email = ? WHERE Ci = ?',
             [nombre, apellido, fechaNacimiento, direccion, telefono, email, ci]
         );
 
@@ -164,7 +164,7 @@ export const updateFuncionarioByCI = async (req, res) => {
 
         return res.status(404).json({ message: "Funcionario no encontrado o no se pudo actualizar" });
     } catch (error) {
-        console.error(error.sqlMessage);
+        console.error({error});
         return res.status(500).json({ message: "Error al actualizar el funcionario", error: error.sqlMessage });
     }
 };
