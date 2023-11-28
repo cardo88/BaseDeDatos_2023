@@ -8,6 +8,9 @@ import Agenda from './Formulario/Agenda.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UserProvider } from './UserProvider.jsx';
+import PanelControl from './admin/PanelControl.jsx';
+import AdminIndex from './admin/AdminIndex.jsx';
+import ListadoFuncionarios from './admin/ListadoFuncionarios.jsx';
 
 
 function App() {
@@ -17,6 +20,9 @@ function App() {
         <ToastContainer/>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/PanelControl" element={<PanelControl />} />
+          <Route path="/AdminIndex" element={<AdminIndex />} />
+          <Route path="/ListadoFuncionarios" element={<ListadoFuncionarios />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Indice" element={<Index />} />

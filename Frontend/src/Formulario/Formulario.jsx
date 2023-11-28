@@ -30,11 +30,14 @@ function Formulario() {
         return;
     }
 
-    for (const key in data) {
+      for (const key in data) {
         if (key === 'carnetJPG') {
-          formData.append(key, data[key][0]); 
+            formData.append(key, data[key][0]); 
+        } else if (key === 'comprobante' && !data.conCarnet) {
+            // No añadir el comprobante si conCarnet es false
+            continue;
         } else {
-          formData.append(key, data[key]); 
+            formData.append(key, data[key]); 
         }
       }
 

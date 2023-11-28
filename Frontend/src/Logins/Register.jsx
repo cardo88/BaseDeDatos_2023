@@ -57,7 +57,7 @@ function Register() {
                 id="ci"
                 type="text"
                 className="w-full p-2 border border-gray-300 rounded mt-1"
-                placeholder="Cedula Identidad"
+                placeholder="C"
               />
               {errors.ci && <span className="text-red-600"> CI is invalid </span>}
             </div>
